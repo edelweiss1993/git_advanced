@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #photo-box {
+            width: 1000px;
+            height: 600px;
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+        .icon {
+            font-size: 40px;
+        }
+        .like-container {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+        #to-like {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="photo-box"></div>
+    <p>Фотограф: <span id="photographer"></span></p>
+    <p>Название: <span id="photo-name"></span></p>
+    <div class="like-container">
+        <span class="icon">&#128402;</span> <span id="likes"></span>
+        <button id="to-like">Поставить лайк</button>
+    </div>
+    <script>
+        const btn = document.querySelector('#to-like');
+
+        async function getPhoto() {
+            try {
+                const response = await fetch('https://api.unsplash.com/photos/random/?client_id=PWkibIDIXtdDyM1RbMDPwGdDtrziz6kj9J9c15Jw2rk');
+                const data = await response.json();
+                console.log(data.likes);
+                document.querySelector('#photo-box').style.backgroundImage = `url(${data.urls.raw})`;
+                document.querySelector('#photo-name').textContent = data.alt_description;
+                document.querySelector('#photographer').textContent = data.user.username;
+                document.querySelector('#likes').textContent = data.likes;
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        btn.addEventListener('click', () => {
+            document.querySelector('#likes').textContent = Number(document.querySelector('#likes').textContent) + 1;
+        })
+
+        
+
+        getPhoto();
+    </script>
+</body>
+</html>
